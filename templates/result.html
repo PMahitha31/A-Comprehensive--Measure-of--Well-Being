@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HDI Predictor | Human Development Index Estimator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header class="app-header">
+            <div class="brand">
+                <span class="brand-icon">🌍</span>
+                <h1>HDI Predictor</h1>
+            </div>
+            <p class="subtitle">Estimate the Human Development Index using Machine Learning</p>
+        </header>
+
+        <main class="card">
+            {% if model_load_error %}
+                <div class="alert alert-error">
+                    <strong>Error:</strong> {{ model_load_error }}
+                </div>
+            {% endif %}
+
+            {% if errors %}
+                <div class="alert alert-error">
+                    <strong>Please fix the following:</strong>
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form action="{{ url_for('predict') }}" method="POST" class="hdi-form" novalidate>
+                <div class="form-group">
+                    <label for="life_expectancy">Life Expectancy at Birth (years)</label>
+                    <input
+                        type="number"
+                        id="life_expectancy"
+                        name="life_expectancy"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="e.g. 75.4"
+                        required
+                    >
+                    <span class="hint">Typical range: 50 – 85 years</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="mean_years_schooling">Mean Years of Schooling</label>
+                    <input
+                        type="number"
+                        id="mean_years_schooling"
+                        name="mean_years_schooling"
+                        step="0.1"
+                        min="0"
+                        max="25"
+                        placeholder="e.g. 9.8"
+                        required
+                    >
+                    <span class="hint">Typical range: 2 – 14 years</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="gni_per_capita">GNI Per Capita (PPP $)</label>
+                    <input
+                        type="number"
+                        id="gni_per_capita"
+                        name="gni_per_capita"
+                        step="1"
+                        min="0"
+                        max="200000"
+                        placeholder="e.g. 15000"
+                        required
+                    >
+                    <span class="hint">Gross National Income per capita in USD</span>
+                </div>
+
+                <button type="submit" class="btn-primary">Predict HDI Score</button>
+            </form>
+        </main>
+
+        <footer class="app-footer">
+            <p>Built with Python, Scikit-learn &amp; Flask — Linear Regression Model</p>
+        </footer>
+    </div>
+</body>
+</html>
